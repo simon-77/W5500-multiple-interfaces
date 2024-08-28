@@ -246,7 +246,7 @@ uint16_t W5500::send(uint8_t socket_n, uint8_t *data, uint16_t len) {
     // 1. Read starting address
     const uint16_t write_pointer = rdSocketReg16(socket_n, SocketOffsetAddr::tx_write_pointer);
     // 2. Write data to the buffer
-    spiFrame.transfer(SpiFrame::Frame{write_pointer, socket_n, SpiFrame::TxBuffer, SpiFrame::Write}, (uint8_t *)&data, len);
+    spiFrame.transfer(SpiFrame::Frame{write_pointer, socket_n, SpiFrame::TxBuffer, SpiFrame::Write}, data, len);
     // 3. Update the write pointer
     wrSocketReg16(socket_n, SocketOffsetAddr::tx_write_pointer, write_pointer + len);
     // 4. Send the data
@@ -274,7 +274,7 @@ uint16_t W5500::receive(uint8_t socket_n, uint8_t *data, uint16_t len) {
     // 1. Read starting address
     const uint16_t read_pointer = rdSocketReg16(socket_n, SocketOffsetAddr::rx_read_pointer);
     // 2. Read data from the buffer
-    spiFrame.transfer(SpiFrame::Frame{read_pointer, socket_n, SpiFrame::RxBuffer, SpiFrame::Read}, (uint8_t *)&data, len);
+    spiFrame.transfer(SpiFrame::Frame{read_pointer, socket_n, SpiFrame::RxBuffer, SpiFrame::Read}, data, len);
     // 3. Update the read pointer
     wrSocketReg16(socket_n, SocketOffsetAddr::rx_read_pointer, read_pointer + len);
     // 4. Notify the updated read pointer to W5500
@@ -584,5 +584,5 @@ void W5500::commonReg(CommonOffsetAddr offset, bool write, uint8_t *data, uint16
 // read & write multiple socket register (SPI will always write & read back the *data buffer)
 void W5500::socketReg(uint8_t socket_n, SocketOffsetAddr offset, bool write, uint8_t *data, uint16_t len) {
     const SpiFrame::Frame frame = {offset, socket_n, SpiFrame::SocketReg, write ? SpiFrame::Write : SpiFrame::Read};
-    spiFrame.transfer(frame, data, 1);
+    spiFrame.transfer(frame, data, len);
 }

@@ -7,6 +7,7 @@ SpiFrame::SpiFrame(pin_size_t cs) : cs(cs) {}
  * @brief Initialize the SPI communication
  */
 void SpiFrame::init() {
+    pinMode(cs, OUTPUT);
     digitalWrite(cs, HIGH); // Deselect the SPI device
     
     SPI.begin();
