@@ -15,14 +15,14 @@ void W5500::init() {
     spiFrame.init();
 
     // Reset the W5500
-    wrCommonReg(CommonOffsetAddr::mode_register, 0x80);
+    wrCommonReg(CommonOffsetAddr::common_mode_register, 0x80);
     spiFrame.sleep(0.001);
-    wrCommonReg(CommonOffsetAddr::mode_register, common_mode_register);
+    wrCommonReg(CommonOffsetAddr::common_mode_register, common_mode_register_value);
 
     // Reset & Configure PHY (auto-negotiation)
-    wrCommonReg(CommonOffsetAddr::phy_config, phy_config_register & 0x78);
+    wrCommonReg(CommonOffsetAddr::phy_config, phy_config_register_value & 0x78);
     spiFrame.sleep(0.001);
-    wrCommonReg(CommonOffsetAddr::phy_config, phy_config_register);
+    wrCommonReg(CommonOffsetAddr::phy_config, phy_config_register_value);
     spiFrame.sleep(0.001);
 }
 
@@ -68,7 +68,7 @@ bool W5500::socketOpen(uint8_t socket_n, SocketMode mode) {
     socketClose(socket_n);
 
     // set the mode & open (initialise) the socket
-    wrSocketReg(socket_n, SocketOffsetAddr::mode_register, mode_value);
+    wrSocketReg(socket_n, SocketOffsetAddr::socket_mode_register, mode_value);
     socketCommand(socket_n, OPEN);
     
     switch(mode) {
@@ -354,7 +354,7 @@ W5500::Port_t W5500::getSocketPort(uint8_t socket_n, SocketPort select) {
  * @param len length of the data (should be 4 for IP-addresses, 6 for MAC-addresses)
  * @param offset offset of the register (default: 0)
  */
-void W5500::regInterfaceAddress(InterfaceAddress select, bool write, uint8_t *data, uint8_t len, uint8_t offset = 0) {
+void W5500::regInterfaceAddress(InterfaceAddress select, bool write, uint8_t *data, uint8_t len, uint8_t offset) {
     uint16_t socket_addr;
     int max_len;
     switch(select) {
@@ -392,7 +392,7 @@ void W5500::regInterfaceAddress(InterfaceAddress select, bool write, uint8_t *da
  * @param len length of the data (should be 4 for IP-addresses, 6 for MAC-addresses)
  * @param offset offset of the register (default: 0)
  */
-void W5500::regSocketAddress(uint8_t socket_n, SocketAddress select, bool write, uint8_t *data, uint8_t len, uint8_t offset = 0) {
+void W5500::regSocketAddress(uint8_t socket_n, SocketAddress select, bool write, uint8_t *data, uint8_t len, uint8_t offset) {
     uint16_t socket_addr;
     int max_len;
     switch(select) {

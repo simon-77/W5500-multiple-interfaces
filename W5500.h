@@ -121,7 +121,7 @@ private:
     //-----------------------------
     // Register Offset Addresses
     enum CommonOffsetAddr{
-        mode_register       = 0x0000,
+        common_mode_register= 0x0000,
         gateway_ip          = 0x0001,   // 0x0001 - 0x0004
         subnet_mask         = 0x0005,   // 0x0005 - 0x0008
         source_mac          = 0x0009,   // 0x0009 - 0x000E
@@ -132,7 +132,7 @@ private:
         versionr            = 0x0039,
     };
     enum SocketOffsetAddr{
-        mode_register       = 0x0000,
+        socket_mode_register= 0x0000,
         command_register    = 0x0001,
         status_register     = 0x0003,
         // MAC, IP, Port
@@ -179,9 +179,9 @@ private:
     // Register-Value Constants
 
     // Mode Register Bits - b5: 0=disable Wake-on-LAN, b4: 0=disable ping block, b3: 0=disable PPPoE, b1: 0=disable Force ARP
-    const uint8_t common_mode_register = 0x00;
+    const uint8_t common_mode_register_value = 0x00;
     // PHY Configuration Bits - b7: 1=no reset, b6: 1=configure PHY with PHYCFGR bits, b5-3: '111'=All capable, Auto-negotiation
-    const uint8_t phy_config_register = 0xF8;
+    const uint8_t phy_config_register_value = 0xF8;
     // Socket Mode Bits - b7: 0=disable multicast (UDP), b6: 1=broadcast blocking (UDP), b5: 0=delayed ACK (TCP), b3: 0=disable unicast blocking (UDP)
     const uint8_t socket_mode_register_default = 0x40;
 
