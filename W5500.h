@@ -56,6 +56,7 @@ public:
 
     //=============================
     // Constructor
+
     W5500(SpiFrame &spiFrame);
 
     //=============================
@@ -63,10 +64,12 @@ public:
 
     //-----------------------------
     // Initialization
+
     void init();
 
     //-----------------------------
     // Socket Managment
+
     bool socketOpen(uint8_t socket_n, SocketMode mode);
     void socketClose(uint8_t socket_n);
     void socketKeepOpen(uint8_t socket_n, SocketMode mode);
@@ -76,6 +79,7 @@ public:
 
     //-----------------------------
     // Send & Receive data
+
     uint16_t sendAvailable(uint8_t socket_n);
     uint16_t receiveAvailable(uint8_t socket_n);
 
@@ -86,21 +90,26 @@ public:
     // MAC, IP & Port configuration
 
     // Set Interface (common to all sockets)
+
     void setInterfaceNetwork(const IP_t source_ip, const IP_t subnet_mask, const IP_t gateway);
     void setInterfaceMAC(const MAC_t source_mac);
     
     // Set Socket Source (all socket modes) & Destination (TCP_Client & UDP only)
+
     void setSocketSource(uint8_t socket_n, Port_t source_port);
-    void setSocketDest(uint8_t socket_n, IP_t dest_ip, Port_t dest_port);
+    void setSocketDest(uint8_t socket_n, const IP_t dest_ip, Port_t dest_port);
 
     // Get Socket Ports
+
     Port_t getSocketPort(uint8_t socket_n, SocketPort select);
     
     // IP- & MAC-Address register access
+    
     void regInterfaceAddress(InterfaceAddress select, bool write, uint8_t *data, uint8_t len, uint8_t offset = 0);
     void regSocketAddress(uint8_t socket_n, SocketAddress select, bool write, uint8_t *data, uint8_t len, uint8_t offset = 0);
 
     // W5500 RX- & TX-Buffer Size
+
     void setBufferSizeRx(uint8_t socket_n, uint8_t buff_size_kB);
     void setBufferSizeTx(uint8_t socket_n, uint8_t buff_size_kB);
     uint8_t getBufferSizeRx(uint8_t socket_n);
@@ -108,6 +117,7 @@ public:
 
     //-----------------------------
     // Status
+    
     uint8_t phyStatus();
     uint8_t chipVersion();
     

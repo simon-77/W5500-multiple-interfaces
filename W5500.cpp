@@ -292,14 +292,22 @@ uint16_t W5500::receive(uint8_t socket_n, uint8_t *data, uint16_t len) {
 // Set Interface (common to all sockets)
 
 void W5500::setInterfaceNetwork(const IP_t source_ip, const IP_t subnet_mask, const IP_t gateway) {
-    regInterfaceAddress(SourceIP, true, (uint8_t *)source_ip, sizeof(IP_t));
-    regInterfaceAddress(SubnetMask, true, (uint8_t *)subnet_mask, sizeof(IP_t));
-    regInterfaceAddress(GatewayIP, true, (uint8_t *)gateway, sizeof(IP_t));
+    // copy IP addresses to a buffer - regInterfaceAddress will overwrite it
+    IP_t ip_buffer;
+    memcpy(ip_buffer, source_ip, sizeof(IP_t));
+    regInterfaceAddress(SourceIP, true, ip_buffer, sizeof(IP_t));
+    memcpy(ip_buffer, subnet_mask, sizeof(IP_t));
+    regInterfaceAddress(SubnetMask, true, ip_buffer, sizeof(IP_t));
+    memcpy(ip_buffer, gateway, sizeof(IP_t));
+    regInterfaceAddress(GatewayIP, true, ip_buffer, sizeof(IP_t));
     
 }
 
 void W5500::setInterfaceMAC(const MAC_t source_mac) {
-    regInterfaceAddress(SourceMAC, true, (uint8_t *)source_mac, sizeof(MAC_t));
+    // copy MAC address to a buffer - regInterfaceAddress will overwrite it
+    MAC_t mac_buffer;
+    memcpy(mac_buffer, source_mac, sizeof(MAC_t));
+    regInterfaceAddress(SourceMAC, true, mac_buffer, sizeof(MAC_t));
 }
 
 //=============================
@@ -320,8 +328,11 @@ void W5500::setSocketSource(uint8_t socket_n, Port_t source_port) {
  * @param dest_ip destination IP address
  * @param dest_port destination port number
  */
-void W5500::setSocketDest(uint8_t socket_n, IP_t dest_ip, Port_t dest_port) {
-    regSocketAddress(socket_n, DestinationIP, true, (uint8_t *)dest_ip, sizeof(IP_t));
+void W5500::setSocketDest(uint8_t socket_n, const IP_t dest_ip, Port_t dest_port) {
+    // copy IP address to a buffer - regSocketAddress will overwrite it
+    IP_t ip_buffer;
+    memcpy(ip_buffer, dest_ip, sizeof(IP_t));
+    regSocketAddress(socket_n, DestinationIP, true, ip_buffer, sizeof(IP_t));
     wrSocketReg16(socket_n, SocketOffsetAddr::destination_port, dest_port);
 }
 
@@ -350,9 +361,10 @@ W5500::Port_t W5500::getSocketPort(uint8_t socket_n, SocketPort select) {
  * @brief Register access (read & write) for INTERFACE IP- & MAC-addresses
  * @param select Address to select (GatewayIP, SubnetMask, SourceIP, SourceMAC)
  * @param write true for write, false for read
- * @param data pointer for reading or writing the data
+ * @param data pointer for reading or writing the data (to *data will always be written)
  * @param len length of the data (should be 4 for IP-addresses, 6 for MAC-addresses)
  * @param offset offset of the register (default: 0)
+ * The SPI transfer will always write to the *data pointer. Even when setting a new address by setting write to true.
  */
 void W5500::regInterfaceAddress(InterfaceAddress select, bool write, uint8_t *data, uint8_t len, uint8_t offset) {
     uint16_t socket_addr;
@@ -388,9 +400,10 @@ void W5500::regInterfaceAddress(InterfaceAddress select, bool write, uint8_t *da
  * @param socket_n Socket number
  * @param select Address to select (DestinationIP, DestinationMAC)
  * @param write true for write, false for read
- * @param data pointer for reading or writing the data
+ * @param data pointer for reading or writing the data (to *data will always be written)
  * @param len length of the data (should be 4 for IP-addresses, 6 for MAC-addresses)
  * @param offset offset of the register (default: 0)
+ * The SPI transfer will always write to the *data pointer. Even when setting a new address by setting write to true.
  */
 void W5500::regSocketAddress(uint8_t socket_n, SocketAddress select, bool write, uint8_t *data, uint8_t len, uint8_t offset) {
     uint16_t socket_addr;
