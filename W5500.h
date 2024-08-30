@@ -99,12 +99,15 @@ public:
     void setSocketSource(uint8_t socket_n, Port_t source_port);
     void setSocketDest(uint8_t socket_n, const IP_t dest_ip, Port_t dest_port);
 
-    // Get Socket Ports
+    // Socket Port Access
 
+    void setSocketPorts(uint8_t socket_n, Port_t port);
+    void setSocketPort(uint8_t socket_n, SocketPort select, Port_t port);
     Port_t getSocketPort(uint8_t socket_n, SocketPort select);
     
     // IP- & MAC-Address register access
     
+    void setSocketDestIP(uint8_t socket_n, const IP_t dest_ip);
     void regInterfaceAddress(InterfaceAddress select, bool write, uint8_t *data, uint8_t len, uint8_t offset = 0);
     void regSocketAddress(uint8_t socket_n, SocketAddress select, bool write, uint8_t *data, uint8_t len, uint8_t offset = 0);
 

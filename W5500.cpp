@@ -343,15 +343,40 @@ void W5500::setSocketSource(uint8_t socket_n, Port_t source_port) {
  * @param dest_port destination port number
  */
 void W5500::setSocketDest(uint8_t socket_n, const IP_t dest_ip, Port_t dest_port) {
-    // copy IP address to a buffer - regSocketAddress will overwrite it
-    IP_t ip_buffer;
-    memcpy(ip_buffer, dest_ip, sizeof(IP_t));
-    regSocketAddress(socket_n, DestinationIP, true, ip_buffer, sizeof(IP_t));
+    setSocketDestIP(socket_n, dest_ip);
     wrSocketReg16(socket_n, SocketOffsetAddr::destination_port, dest_port);
 }
 
 //=============================
-// Get Socket Ports
+// Socket Port Access
+
+/**
+ * @brief Set the source & destination port of a socket to the same value
+ * @param socket_n socket number
+ * @param select SourcePort or DestinationPort
+ * @param source_port source port number
+ */
+void W5500::setSocketPorts(uint8_t socket_n, Port_t port) {
+    wrSocketReg16(socket_n, SocketOffsetAddr::source_port, port);
+    wrSocketReg16(socket_n, SocketOffsetAddr::destination_port, port);
+}
+
+/**
+ * @brief Set the source/destination port of a socket
+ * @param socket_n socket number
+ * @param select SourcePort or DestinationPort
+ * @param source_port source port number
+ */
+void W5500::setSocketPort(uint8_t socket_n, SocketPort select, Port_t port) {
+    switch(select) {
+        case SourcePort:
+            wrSocketReg16(socket_n, SocketOffsetAddr::source_port, port);
+            break;
+        case DestinationPort:
+            wrSocketReg16(socket_n, SocketOffsetAddr::destination_port, port);
+            break;
+    }
+}
 
 /**
  * @brief Get the source/destination port of a socket
@@ -370,6 +395,19 @@ W5500::Port_t W5500::getSocketPort(uint8_t socket_n, SocketPort select) {
 
 //=============================
 // IP- & MAC-Address register access
+
+/**
+ * @brief Set the destination IP of a socket (TCP_Client & UDP only)
+ * @param socket_n Socket number
+ * @param dest_ip Destination IP address
+ * Same as "setSocketDest" but only for the IP address.
+ */
+void W5500::setSocketDestIP(uint8_t socket_n, const IP_t dest_ip) {
+    // copy IP address to a buffer - regSocketAddress will overwrite it
+    IP_t ip_buffer;
+    memcpy(ip_buffer, dest_ip, sizeof(IP_t));
+    regSocketAddress(socket_n, DestinationIP, true, ip_buffer, sizeof(IP_t));
+}
 
 /**
  * @brief Register access (read & write) for INTERFACE IP- & MAC-addresses
