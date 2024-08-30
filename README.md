@@ -3,6 +3,8 @@ Ethernet library allowing to use multiple W5500 internet controllers.
 
 Due to a lack of software libraries allowing to control multiple W5500 ethernet interfaces from one microcontroller, this object oriented library was created. Furthermore, the class can be easily adapted for different microcontrollers, allowing for seamless integration with different hardware platforms.
 
+See software examples provided (e.g. `Arduino/Example.ino`) for a demo.
+
 Features:
 - Control multiple W5500 ethernet interfaces with one microcontroller.
 - Shared SPI bus, only one dedicated chip-select line required per IC.
