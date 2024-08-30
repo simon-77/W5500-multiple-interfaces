@@ -260,10 +260,14 @@ uint16_t W5500::send(uint8_t socket_n, uint8_t *data, uint16_t len) {
  * @param socket_n Socket number
  * @param data Pointer for the received data
  * @param len maximum length of the receiving data
+ * @param udpIgnoreHeader only applicable for UDP, if true only the payload will be received
  * @return actuall number of bytes received
  * The RECV command will be issued, updating the read pointer of W5500.
+ * In UDP mode, the W5500 puts 8-byte Packet-Info before the Data packet.
+ * <https://docs.wiznet.io/Product/iEthernet/W5500/Application/udp>
+ * Put udpIgnoreHeader to true for only receiving the payload.
  */
-uint16_t W5500::receive(uint8_t socket_n, uint8_t *data, uint16_t len) {
+uint16_t W5500::receive(uint8_t socket_n, uint8_t *data, uint16_t len, bool udpIgnoreHeader) {
     len = std::min(len, receiveAvailable(socket_n));
     // nothing to receive
     if (len == 0) {
@@ -272,7 +276,17 @@ uint16_t W5500::receive(uint8_t socket_n, uint8_t *data, uint16_t len) {
 
     //=== Read Operation
     // 1. Read starting address
-    const uint16_t read_pointer = rdSocketReg16(socket_n, SocketOffsetAddr::rx_read_pointer);
+    uint16_t read_pointer = rdSocketReg16(socket_n, SocketOffsetAddr::rx_read_pointer);
+    //--- UDP-Header information in the first 8 bytes
+    if (udpIgnoreHeader) {
+        uint8_t udp_header[8]; // 4-byte destination IP, 2-byte destination port, 2-byte length of data packet
+        if (len < 8) {
+            return 0; // not enough space for the header
+        }
+        spiFrame.transfer(SpiFrame::Frame{read_pointer, socket_n, SpiFrame::RxBuffer, SpiFrame::Read}, udp_header, 8);
+        len = std::min(len-8, ((uint16_t)udp_header[6]) << 8 | udp_header[7]); // read only one UDP data packet
+        read_pointer += 8; // increase past
+    }
     // 2. Read data from the buffer
     spiFrame.transfer(SpiFrame::Frame{read_pointer, socket_n, SpiFrame::RxBuffer, SpiFrame::Read}, data, len);
     // 3. Update the read pointer
