@@ -39,7 +39,7 @@ void W5500::init() {
  * There are timeouts for each step, the function will return eventually.
  */
 bool W5500::socketOpen(uint8_t socket_n, SocketMode mode) {
-    if ( (rdCommonReg(CommonOffsetAddr::phy_config) & 0x01) == 0) {
+    if (! phyLinkUp()) {
         // PHY link is down
         return false;
     }
@@ -523,6 +523,14 @@ uint8_t W5500::getBufferSizeTx(uint8_t socket_n) {
 //=======================================================
 // Status
 //=======================================================
+
+/**
+ * @brief Check if the PHY link is up
+ * @return true if the PHY link is up, false if the PHY link is down
+ */
+bool W5500::phyLinkUp() {
+    return (rdCommonReg(CommonOffsetAddr::phy_config) & 0x01);
+}
 
 /**
  * @brief Get the PHY status bits

@@ -54,6 +54,10 @@ public:
         DestinationPort,
     };
 
+    //-----------------------------
+    // Constants
+    static constexpr uint8_t Socket_MAX = 8; // 0-7
+
     //=============================
     // Constructor
 
@@ -121,6 +125,7 @@ public:
     //-----------------------------
     // Status
     
+    bool phyLinkUp();
     uint8_t phyStatus();
     uint8_t chipVersion();
     
