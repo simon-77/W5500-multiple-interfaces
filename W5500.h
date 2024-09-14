@@ -30,7 +30,12 @@ public:
         TCP_Connected   = 3, // TCP connection established (client or server)
         Temporary       = 4, // temporary states of W5500
     };
-    
+    // UDP receive data has a Packet-Info header - define how to handle it
+    enum UdpHeaderMode{
+        Raw,                // Return Packet-Info + payload
+        PayloadOnly,        // Ignore Packet-Info, return only payload
+        UpdateDestination,  // update UDP destination IP & Port, return only payload
+    };
     //-----------------------------
     // IP, MAC, Port - Types
     using IP_t = uint8_t[4];    // e.g. IP_t ip = {192, 168, 0, 1};
@@ -88,7 +93,7 @@ public:
     uint16_t receiveAvailable(uint8_t socket_n);
 
     uint16_t send(uint8_t socket_n, uint8_t *data, uint16_t len);
-    uint16_t receive(uint8_t socket_n, uint8_t *data, uint16_t len, bool udpIgnoreHeader = false);
+    uint16_t receive(uint8_t socket_n, uint8_t *data, uint16_t len, UdpHeaderMode udpMode = UdpHeaderMode::Raw);
 
     //-----------------------------
     // MAC, IP & Port configuration
