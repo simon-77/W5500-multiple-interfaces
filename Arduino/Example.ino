@@ -294,14 +294,14 @@ void loop()
 
     // Relay data between eth1 & eth2
     if (eth1.receiveAvailable(1) > 0) {
-        int len = eth1.receive(1, buffer, sizeof(buffer), UdpHeaderMode::UpdateDestination);
+        int len = eth1.receive(1, buffer, sizeof(buffer), W5500::UpdateDestination);
         Serial.print("eth1 (socket 1) - UDP received : ");
         Serial.write(buffer, len);
         eth2.send(1, buffer, len);
         
     }
     if (eth2.receiveAvailable(1) > 0) {
-        int len = eth2.receive(1, buffer, sizeof(buffer), UdpHeaderMode::UpdateDestination);
+        int len = eth2.receive(1, buffer, sizeof(buffer), W5500::UpdateDestination);
         Serial.print("eth2 (socket 1) - UDP received : ");
         Serial.write(buffer, len);
         eth1.send(1, buffer, len);

@@ -93,7 +93,7 @@ public:
     uint16_t receiveAvailable(uint8_t socket_n);
 
     uint16_t send(uint8_t socket_n, uint8_t *data, uint16_t len);
-    uint16_t receive(uint8_t socket_n, uint8_t *data, uint16_t len, UdpHeaderMode udpMode = UdpHeaderMode::Raw);
+    uint16_t receive(uint8_t socket_n, uint8_t *data, uint16_t len, UdpHeaderMode udpMode = Raw);
 
     //-----------------------------
     // MAC, IP & Port configuration
