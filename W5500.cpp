@@ -279,7 +279,7 @@ uint16_t W5500::receive(uint8_t socket_n, uint8_t *data, uint16_t len, UdpHeader
     uint16_t read_pointer = rdSocketReg16(socket_n, SocketOffsetAddr::rx_read_pointer);
 
     //--- UDP-Header information in the first 8 bytes
-    if (udpMode != UdpHeaderMode::Raw) {
+    if ( (udpMode != UdpHeaderMode::Raw) && (socketStatus(socket_n) == UDP_Open) ) {
         uint8_t udp_header[8]; // 4-byte destination IP, 2-byte destination port, 2-byte length of data packet
         if (rec_available < 8) {
             return 0; // not enough data to read the header
