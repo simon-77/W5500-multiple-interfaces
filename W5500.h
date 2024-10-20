@@ -205,8 +205,8 @@ private:
     const uint8_t common_mode_register_value = 0x00;
     // PHY Configuration Bits - b7: 1=no reset, b6: 1=configure PHY with PHYCFGR bits, b5-3: '111'=All capable, Auto-negotiation
     const uint8_t phy_config_register_value = 0xF8;
-    // Socket Mode Bits - b7: 0=disable multicast (UDP), b6: 1=broadcast blocking (UDP), b5: 0=delayed ACK (TCP), b3: 0=disable unicast blocking (UDP)
-    const uint8_t socket_mode_register_default = 0x40;
+    // Socket Mode Bits - b7: 0=disable multicast (UDP), b6: 0=disable broadcast blocking (UDP), b5: 0=delayed ACK (TCP), b3: 0=disable unicast blocking (UDP)
+    const uint8_t socket_mode_register_default = 0x00;
 
     //-------------------
     // Timeout Constants
