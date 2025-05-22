@@ -26,6 +26,28 @@ void W5500::init() {
     spiFrame.sleep(0.001);
 }
 
+/**
+ * @brief Set the Keep Alive Time Register for one interface
+ * @param socket_n Socket number
+ * @param time_reg_5s Time in 5s units
+ */
+void W5500::setAutoKeepAlive(uint8_t socket_n, uint8_t time_reg_5s) {
+    if (socket_n < Socket_MAX) {
+        wrSocketReg(socket_n, SocketOffsetAddr::keep_alive_time, time_reg_5s);
+    }
+}
+
+/**
+ * @brief Set the Keep Alive Time Register for all interfaces
+ * @param seconds Time in seconds
+ */
+void W5500::setAutoKeepAlive_all(float seconds) {
+    uint8_t time_reg_5s = static_cast<uint8_t>(seconds / 5.0);
+    for (uint8_t socket_n = 0; socket_n < Socket_MAX; socket_n++) {
+        setAutoKeepAlive(socket_n, time_reg_5s);
+    }
+}
+
 //=======================================================
 // Socket Management (Open, Close, Maintain)
 //=======================================================

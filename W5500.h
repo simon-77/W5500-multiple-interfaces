@@ -75,7 +75,9 @@ public:
     // Initialization
 
     void init();
-
+    void setAutoKeepAlive(uint8_t socket_n, uint8_t time_reg_5s); // time unit: 5s
+    void setAutoKeepAlive_all(float seconds);
+    
     //-----------------------------
     // Socket Managment
 
@@ -173,6 +175,8 @@ private:
         rx_received_size    = 0x0026,   // 0x0026 - 0x0027
         rx_read_pointer     = 0x0028,   // 0x0028 - 0x0029
         rx_write_pointer    = 0x002A,   // 0x002A - 0x002B
+        // Other
+        keep_alive_time     = 0x002F,   // time unit: 5s
     };
     //-----------------------------
     // Commands & Status - Values
